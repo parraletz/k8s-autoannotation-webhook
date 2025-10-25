@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.1 (2025-10-25)
+
+### Bug Fixes
+
+- Correct Docker image tags and repository name
+  ([`b72cf52`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/b72cf5216b1785d9591c6f2295cc0d8e309e7988))
+
+
 ## v1.2.0 (2025-10-25)
 
 ### Features
