@@ -2,11 +2,13 @@ name: Semantic Release
 
 on:
   workflow_dispatch:
+
 jobs:
   release:
     runs-on: ubuntu-latest
     concurrency: release
-
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
@@ -24,8 +26,20 @@ jobs:
           GH_TOKEN: "none"
         run: uv run semantic-release -v version --no-changelog --no-commit --no-tag
 
+      - name: Stage lock File for version commit
+        run: git add uv.lock
+
+      - name: Release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run semantic-release -v --strict version --skip-build
+          uv run semantic-release publish
+
     outputs:
       new-release-detected: ${{ steps.version.outputs.released }}
       new-release-version: ${{ steps.version.outputs.version }}
       new-release-tag: ${{ steps.version.outputs.tag }}
       new-release-is-prerelease: ${{ steps.version.outputs.is_prerelease }}
+      released: ${{ steps.release.outputs.released }}
