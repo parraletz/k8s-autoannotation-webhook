@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.0 (2025-10-25)
+
+### Features
+
+- Consolidate CI workflows for automated releases
+  ([`710b308`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/710b3081cdf7d6cc1ceebbd181105c7f873121ee))
+
+
 ## v1.1.0 (2025-10-25)
 
 ### Features
