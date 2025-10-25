@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.3.0 (2025-10-25)
+
+### Features
+
+- Add code coverage reporting and simplify codebase
+  ([`32bb65a`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/32bb65aef8723181511684fde00fa0671056da5f))
+
+
 ## v1.2.1 (2025-10-25)
 
 ### Bug Fixes
