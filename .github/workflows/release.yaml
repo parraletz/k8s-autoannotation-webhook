@@ -64,16 +64,19 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify release
+        run: |
+          cat pyproject.toml
 
       - name: Metadata for Docker image
         id: metadata
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/parraletz/webhookmuttating-example
+          images: ghcr.io/parraletz/webhookmuttating
           tags: |
-            ghcr.io/parraletz/webhookmuttating-example:${{ github.sha }}
-            ghcr.io/parraletz/webhookmuttating-example:latest
-            ghcr.io/parraletz/webhookmuttating-example:${{ needs.release.outputs.new-release-version }}
+            ${{ github.sha }}
+            latest
+            ${{ needs.release.outputs.new-release-version }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
