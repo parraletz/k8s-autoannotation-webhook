@@ -1,8 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*"
 
 jobs:
   push_to_registry:
@@ -22,14 +23,19 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract tag name
+        id: get_tag
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
       - name: Metadata for Docker image
         id: metadata
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/parraletz/webhookmuttating-example
           tags: |
-            ghcr.io/parraletz/webhookmuttating-example:${{ github.ref_name }}
+            ghcr.io/parraletz/webhookmuttating-example:${{ github.sha }}
             ghcr.io/parraletz/webhookmuttating-example:latest
+            ghcr.io/parraletz/webhookmuttating-example:${{ steps.get_tag.outputs.tag_name }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
