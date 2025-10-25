@@ -1,23 +1,81 @@
+name: Release
+
 on:
   push:
-    tags:
-      - "v*"
-  workflow_dispatch:
+    branches:
+      - "main"
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v5
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          fetch-depth: 0
+
+      - name: Install UV
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: semantic-release
+        id: version
+        env:
+          GH_TOKEN: "none"
+        run: uv run semantic-release -v version --no-changelog --no-commit --no-tag
+
+      - name: Stage lock File for version commit
+        run: git add uv.lock
+
+      - name: Release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run semantic-release -v --strict version --skip-build
+          uv run semantic-release publish
+
+    outputs:
+      new-release-detected: ${{ steps.version.outputs.released }}
+      new-release-version: ${{ steps.version.outputs.version }}
+      new-release-tag: ${{ steps.version.outputs.tag }}
+      new-release-is-prerelease: ${{ steps.version.outputs.is_prerelease }}
+      released: ${{ steps.release.outputs.released }}
+
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v5
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Metadata for Docker image
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/parraletz/webhookmuttating-example
+          tags: |
+            ghcr.io/parraletz/webhookmuttating-example:${{ github.sha }}
+            ghcr.io/parraletz/webhookmuttating-example:latest
+            ghcr.io/parraletz/webhookmuttating-example:${{ needs.release.outputs.new-release-version }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
