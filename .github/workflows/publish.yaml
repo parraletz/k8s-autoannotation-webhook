@@ -1,0 +1,37 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to GitHub Container Registry
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v5
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Metadata for Docker image
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/parraletz/webhookmuttating-example
+          tags: |
+            ghcr.io/parraletz/webhookmuttating-example:${{ github.ref_name }}
+            ghcr.io/parraletz/webhookmuttating-example:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
