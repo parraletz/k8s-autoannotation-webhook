@@ -8,11 +8,27 @@ jobs:
     concurrency: release
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Python Semantic Release
-        uses: relekang/python-semantic-release@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install UV
+        uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run uv sync
+        run: uv sync --extra build
+
+      - name: semantic-release
+        id: version
+        env:
+          GH_TOKEN: "none"
+        run: uv run semantic-release -v version --no-changelog --no-commit --no-tag
+
+    outputs:
+      new-release-detected: ${{ steps.version.outputs.released }}
+      new-release-version: ${{ steps.version.outputs.version }}
+      new-release-tag: ${{ steps.version.outputs.tag }}
+      new-release-is-prerelease: ${{ steps.version.outputs.is_prerelease }}
