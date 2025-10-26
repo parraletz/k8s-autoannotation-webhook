@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.5.0 (2025-10-26)
+
+### Features
+
+- Add production environment configuration
+  ([`d2794ac`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/d2794ac3c76b57a84297c7a6a264036504e6ff53))
+
+### Refactoring
+
+- Add caching to project metadata load
+  ([`b6cb1b8`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/b6cb1b825f8fda858260c3c8b2feaf913ed14781))
+
+
 ## v1.4.0 (2025-10-26)
 
 ### Chores
