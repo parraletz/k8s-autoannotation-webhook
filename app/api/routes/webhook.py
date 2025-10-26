@@ -23,7 +23,7 @@ def get_router(container: Container) -> APIRouter:
     @router.post(
         "", response_model=AdmissionReviewResponse, status_code=status.HTTP_201_CREATED
     )
-    def create_item(body: AdmissionReviewRequest):
+    def create_item(body: AdmissionReviewRequest) -> AdmissionReviewResponse:
         target_key = "example.com/injected"
         target_value = "true"
         patch_ops = []

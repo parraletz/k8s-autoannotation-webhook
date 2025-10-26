@@ -8,7 +8,7 @@ class Container:
 
 
 @lru_cache
-def _singleton():
+def _singleton() -> Container:
     return Container()
 
 

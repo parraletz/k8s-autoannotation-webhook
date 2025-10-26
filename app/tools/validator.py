@@ -1,6 +1,4 @@
-"""
-Validator service
-"""
+"""Validator service"""
 
 
 def require(condition: bool, message: str) -> None:

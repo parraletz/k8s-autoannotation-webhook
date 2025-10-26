@@ -1,0 +1,116 @@
+repos:
+  # Pre-commit hooks for general file cleanup
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"] # Allow custom YAML tags in Kubernetes manifests
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: requirements-txt-fixer
+
+  # Python code formatting with Black
+  - repo: https://github.com/psf/black
+    rev: 25.9.0
+    hooks:
+      - id: black
+        language_version: python3.12
+        args: ["--line-length=88"]
+
+  # Import sorting with isort
+  - repo: https://github.com/pycqa/isort
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        args: ["--profile=black", "--line-length=88"]
+
+  # # Python linting with flake8
+  # - repo: https://github.com/pycqa/flake8
+  #   rev: 7.3.0
+  #   hooks:
+  #     - id: flake8
+  #       args: ["--max-line-length=88", "--extend-ignore=E203,W503"]
+  #       additional_dependencies:
+  #         - flake8-docstrings
+  #         - flake8-import-order
+  #         - flake8-bugbear
+
+  # Type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - types-requests
+          - pydantic
+          - fastapi
+        args: ["--ignore-missing-imports", "--no-strict-optional"]
+        exclude: ^tests/
+
+  # Security scanning with bandit
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml"]
+        additional_dependencies: ["bandit[toml]"]
+        exclude: ^tests/
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.14.0
+    hooks:
+      - id: hadolint-docker
+        args:
+          [
+            "--ignore",
+            "DL3008",
+            "--ignore",
+            "DL3009",
+            "--ignore",
+            "DL3013",
+            "--ignore",
+            "DL3042",
+          ]
+
+  # Kubernetes YAML validation
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args: ["-d", "relaxed"]
+        files: \.(yaml|yml)$
+
+  # Conventional commit message validation
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.3.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [optional-scope]
+
+  # Python dependency security check (manual)
+  # Note: Run 'uv run pip-audit' manually for dependency security scanning
+
+# Configuration for specific hooks
+default_language_version:
+  python: python3.12
+
+# Exclude certain files/directories
+exclude: |
+  (?x)^(
+    \.git/|
+    \.venv/|
+    __pycache__/|
+    \.pytest_cache/|
+    htmlcov/|
+    \.coverage|
+    coverage\.xml|
+    uv\.lock
+  )$

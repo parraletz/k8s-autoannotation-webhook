@@ -65,11 +65,11 @@ def create_item(body: AdmissionReviewRequest):
     target_key = "example.com/injected"
     target_value = "true"
     patch_ops = []
-    
+
     # Extract admission review data
     annotations = body.annotations
     uid = body.uid
-    
+
     # Apply mutation logic
     if annotations is None:
         patch_ops.append({
@@ -77,7 +77,7 @@ def create_item(body: AdmissionReviewRequest):
             "path": "/metadata/annotations",
             "value": {target_key: target_value}
         })
-    
+
     # Return admission response with patches
     return AdmissionReviewResponse(...)
 ```
@@ -221,6 +221,15 @@ make install
 uv sync
 ```
 
+3. Set up pre-commit hooks (recommended):
+
+```bash
+make pre-commit-install
+# or
+uv run pre-commit install
+uv run pre-commit install --hook-type commit-msg
+```
+
 ### Running the Application
 
 #### Development Mode
@@ -299,6 +308,10 @@ spec:
         ports:
         - containerPort: 8000
         env:
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8000"
         - name: OVERWRITE
           value: "false"
         volumeMounts:
@@ -385,19 +398,82 @@ Current test coverage: **93.88%**
 
 See [TESTING.md](TESTING.md) for detailed testing information.
 
+## Code Quality
+
+This project uses pre-commit hooks to ensure code quality and consistency.
+
+### Pre-commit Hooks
+
+The following hooks are configured:
+
+- **Code Formatting**: Black and isort for consistent Python code style
+- **Linting**: Flake8 for code quality checks
+- **Type Checking**: MyPy for static type analysis
+- **Security**: Bandit for security vulnerability scanning
+- **File Checks**: Trailing whitespace, end-of-file fixes, YAML/JSON validation
+- **Docker**: Hadolint for Dockerfile best practices
+- **Kubernetes**: YAML validation for manifests
+- **Commit Messages**: Conventional commit format validation
+
+### Running Code Quality Checks
+
+```bash
+# Format code
+make format
+
+# Run linting
+make lint
+
+# Run all pre-commit hooks
+make pre-commit-run
+
+# Run pre-commit on specific files
+uv run pre-commit run --files app/api/routes/webhook.py
+```
+
+### Manual Code Quality Commands
+
+```bash
+# Format with Black
+uv run black app/ tests/
+
+# Sort imports with isort
+uv run isort app/ tests/
+
+# Lint with flake8
+uv run flake8 app/ tests/
+
+# Type check with mypy
+uv run mypy app/
+
+# Security scan with bandit
+uv run bandit -r app/
+
+# Dependency security audit
+uv run pip-audit
+
+# Run all security checks
+make security
+```
+
 ## Development Commands
 
 The project includes a Makefile with common development tasks:
 
 ```bash
-make help           # Show available commands
-make install        # Install dependencies
-make test           # Run tests
-make coverage       # Run tests with coverage
-make coverage-html  # Generate HTML coverage report
-make run            # Start development server
-make run-prod       # Start production server
-make clean          # Clean up generated files
+make help                # Show available commands
+make install             # Install dependencies
+make pre-commit-install  # Install pre-commit hooks
+make format              # Format code with black and isort
+make lint                # Run linting checks
+make security            # Run security scans (bandit, pip-audit)
+make pre-commit-run      # Run all pre-commit hooks
+make test                # Run tests
+make coverage            # Run tests with coverage
+make coverage-html       # Generate HTML coverage report
+make run                 # Start development server
+make run-prod            # Start production server
+make clean               # Clean up generated files
 ```
 
 ## Benefits of This Architecture
@@ -440,7 +516,7 @@ def create_item(body: AdmissionReviewRequest):
         "example.com/processed-by": "webhook-v1.0",
         "example.com/timestamp": datetime.utcnow().isoformat()
     }
-    
+
     for key, value in annotations_to_add.items():
         # Apply annotation logic
         pass
@@ -472,7 +548,7 @@ def should_mutate(obj: dict) -> bool:
     # Only mutate pods in specific namespaces
     namespace = obj.get("metadata", {}).get("namespace")
     return namespace in ["production", "staging"]
-    
+
     # Or based on labels
     labels = obj.get("metadata", {}).get("labels", {})
     return labels.get("app") == "web-server"
@@ -493,7 +569,12 @@ TARGET_NAMESPACES = os.getenv("TARGET_NAMESPACES", "default").split(",")
 
 ### Environment Variables
 
+**Server Configuration:**
+- **`HOST`**: Host to bind to (default: "127.0.0.1" for security, set to "0.0.0.0" in containers)
+- **`PORT`**: Port to listen on (default: "8000")
 - **`ENVIRONMENT`**: Set to "local" for development mode with hot reload
+
+**Webhook Behavior:**
 - **`OVERWRITE`**: Set to "true", "1", or "yes" to overwrite existing annotations (default: "false")
 - **`TARGET_ANNOTATION`**: Custom annotation key to inject (default: "example.com/injected")
 - **`TARGET_VALUE`**: Custom annotation value (default: "true")
