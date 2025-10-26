@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.2 (2025-10-26)
+
+### Refactoring
+
+- Streamline devcontainer configuration
+  ([`1f58c68`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/1f58c68bede5675617830cec487945f50c0871f3))
+
+
 ## v1.5.1 (2025-10-26)
 
 ### Chores
