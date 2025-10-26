@@ -2,6 +2,24 @@
 
 <!-- version list -->
 
+## v1.4.0 (2025-10-26)
+
+### Chores
+
+- Disable Codecov coverage upload in CI workflow
+  ([`d491482`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/d49148261fa869638475b1cd0cf0ef8027648233))
+
+### Documentation
+
+- Add LICENSE and improve project documentation
+  ([`86c2155`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/86c2155f576ae214970c3c78fc15aa7c0d6bd401))
+
+### Features
+
+- Add pre-commit hooks and code quality tools
+  ([`6336ad1`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/6336ad1ecbe870d15a77f57636b162423412dd4e))
+
+
 ## v1.3.0 (2025-10-25)
 
 ### Features
