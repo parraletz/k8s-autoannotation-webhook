@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.1 (2025-10-26)
+
+### Chores
+
+- Update semantic-release version bump rules
+  ([`25f6c36`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/25f6c36f456c12e520094453cf311902431a8391))
+
+
 ## v1.5.0 (2025-10-26)
 
 ### Features
