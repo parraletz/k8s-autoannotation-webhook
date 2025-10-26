@@ -46,7 +46,7 @@ run:
 	@export ENVIRONMENT=local && uv run python main.py
 
 run-prod:
-	@uv run python main.py
+	@export HOST=0.0.0.0 && export ENVIRONMENT=production && uv run python main.py
 
 clean:
 	@echo "Cleaning up..."

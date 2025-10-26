@@ -55,6 +55,7 @@ ENV UV_CACHE_DIR=/app/.uv_cache
 # Set host to bind to all interfaces in container environment
 ENV HOST=0.0.0.0
 ENV PORT=8000
+ENV ENVIRONMENT=production
 
 # Expose the port that the application listens on.
 EXPOSE 8000
