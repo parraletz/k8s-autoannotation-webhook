@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.6.0 (2025-10-27)
+
+### Chores
+
+- Update build configuration and package settings
+  ([`fa9d6ac`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/fa9d6acbe4f28a207d40596cdbbee61aad437a86))
+
+### Features
+
+- Add Kubernetes deployment and multi-arch container support
+  ([`7553e34`](https://github.com/parraletz/k8s-autoannotation-webhook/commit/7553e34085365b1cfba624b311dd4c9a080b73e0))
+
+
 ## v1.5.2 (2025-10-26)
 
 ### Refactoring
