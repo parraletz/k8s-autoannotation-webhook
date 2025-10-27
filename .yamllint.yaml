@@ -1,0 +1,43 @@
+extends: relaxed
+
+rules:
+  # Allow longer lines for Kubernetes manifests
+  line-length:
+    max: 200
+    level: warning
+
+  # Allow truthy values (on/off, yes/no, etc.)
+  truthy:
+    allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+    check-keys: false
+
+  # Allow empty values for optional fields
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: false
+
+  # Allow comments at the end of lines
+  comments:
+    min-spaces-from-content: 1
+
+  # Allow indentation inconsistencies common in Kubernetes YAML
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Allow brackets for lists (common in Kubernetes)
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Allow braces for objects
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Allow document start markers to be optional
+  document-start: disable
+
+  # Allow multiple documents in one file
+  document-end: disable

@@ -10,9 +10,28 @@ if __name__ == "__main__":
     # Use environment variable for host, default to localhost for security
     # In production/container environments, set HOST=0.0.0.0
     host = os.getenv("HOST", "127.0.0.1")
-    port = int(os.getenv("PORT", "8000"))
+    port = int(os.getenv("PORT", "8443"))
+    ssl_keyfile = os.getenv(
+        "TLS_KEY_FILE", f"{os.path.dirname(__file__)}/certs/tls.key"
+    )
+    ssl_certfile = os.getenv(
+        "TLS_CERT_FILE", f"{os.path.dirname(__file__)}/certs/tls.crt"
+    )
 
     if os.getenv("ENVIRONMENT") == "local":
-        uvicorn.run("main:app", host=host, port=port, reload=True)
+        uvicorn.run(
+            "main:app",
+            host=host,
+            port=port,
+            reload=True,
+            ssl_keyfile=ssl_keyfile,
+            ssl_certfile=ssl_certfile,
+        )
     else:
-        uvicorn.run("main:app", host=host, port=port)
+        uvicorn.run(
+            "main:app",
+            host=host,
+            port=port,
+            ssl_keyfile=ssl_keyfile,
+            ssl_certfile=ssl_certfile,
+        )

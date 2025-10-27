@@ -5,10 +5,10 @@
 # https://docs.docker.com/go/dockerfile-reference/
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
 ARG PYTHON_VERSION=3.12.9
 FROM python:${PYTHON_VERSION}-slim as base
 
+LABEL org.opencontainers.image.source="https://github.com/parraletz/k8s-autoannotation-webhook"
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -54,11 +54,11 @@ ENV UV_CACHE_DIR=/app/.uv_cache
 
 # Set host to bind to all interfaces in container environment
 ENV HOST=0.0.0.0
-ENV PORT=8000
+ENV PORT=8443
 ENV ENVIRONMENT=production
 
 # Expose the port that the application listens on.
-EXPOSE 8000
+EXPOSE 8443
 
 # Run the application.
 CMD ["uv", "run", "main.py"]

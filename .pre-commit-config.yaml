@@ -7,6 +7,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
         args: ["--unsafe"] # Allow custom YAML tags in Kubernetes manifests
+        exclude: ^kubernetes/charts/autoannotation/.*\.yaml$
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict
@@ -84,8 +85,17 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-        args: ["-d", "relaxed"]
+        args: ["-c", ".yamllint.yaml"]
         files: \.(yaml|yml)$
+        exclude: ^kubernetes/charts/autoannotation/.*\.yaml$
+
+  # Helm chart validation
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.23
+    hooks:
+      - id: helmlint
+        files: ^kubernetes/charts/autoannotation/
+        args: ["--strict"]
 
   # Conventional commit message validation
   - repo: https://github.com/compilerla/conventional-pre-commit
